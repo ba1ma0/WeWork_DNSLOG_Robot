@@ -20,3 +20,6 @@ nohup python3 DNSLOG.py
 # 0x03 第三步
 配合https://github.com/ba1ma0/SDLC_Vuln_Auto_Find 组合进行使用,然后在企业微信中静待ssrf,或者其他漏洞
 ![](https://raw.githubusercontent.com/ba1ma0/WeWork_DNSLOG_Robot/main/1.png)
+
+# 有疑问🤔️联系作者
+vx: 5ed0c42e63c9c2145990351ccaec4da5
