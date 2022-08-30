@@ -3,18 +3,16 @@ import datetime
 import time
 import requests
 import json
-from datetime import timedelta 
-###该工具的主要作用是每隔5s请求一次ceye.io,如果有新的dnslog记录则推送到企业微信
-#####################################################人工配置#####################################################
-robotAPI                 = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=wechat_robot_token"                    #wechat_robot_token是在企业微信群中申请的机器人链接
-ceyeDNS                  = "http://api.ceye.io/v1/records?token=ceye_token&type=dns"                                    #ceye_token是在ceye.io申请的token
-ceyeHTTP                 = "http://api.ceye.io/v1/records?token=ceye_token&type=http"                                   #ceye_token是在ceye.io申请的token
-staffNoList              = ['01221455']                                                                                 #机器人发送消息时需要被at的人!需要at全部人的时候直接@all即可
-sleepTime                = 5                                                                                            #程序每隔5s请求一次ceye.io获取dnslog记录!
-#####################################################人工配置#####################################################
-
-IPAPI                    = "http://ip-api.com/json/testflagIP"
+from datetime import timedelta
+############################################################### 人工配置区 ###############################################################
+robotAPI                 = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=wework_robot_token"                                    #企业微信机器人token
+ceyeDNS                  = "http://api.ceye.io/v1/records?token=ceye_token&type=dns"                                                    #ceye.io注册获取的token
+ceyeHTTP                 = "http://api.ceye.io/v1/records?token=ceye_token&type=http"                                                   #ceye.io注册获取的token
+staffNoList              = ['01221455']                                                                                                 #机器人发送消息时需要被at的人!01221455为工号,需要at全部人的时候直接@all即可
+sleepTime                = 5                                                                                                            #程序每隔5s请求一次ceye.io获取dnslog记录!
+############################################################### 人工配置区 ###############################################################
 baiduAPI                 = "https://sp0.baidu.com/8aQDcjqpAAV3otqbppnN2DJv/api.php?query=testflagIP&co=&resource_id=6006&oe=utf8"
+IPAPI                    = "http://ip-api.com/json/testflagIP"
 ceye_dns_previous        = ''
 ceye_http_previous       = ''
 WeWorktPostheaders       =   {'Content-Type':'application/json'}
@@ -95,7 +93,7 @@ while True:
             #print(res)
         if result['httpChange'] == True:
             ipInfo                      = getIPLocation(result['http']['remote_addr'])
-            WeWorktPostContent          = "*****************************HTTP请求*****************************\n请求ID    : "+result['http']['id']+ "\n请求时间 : "+UTC2BJtime(result['http']['created_at'])+"\n"+"请求IP    : "+result['http']['remote_addr']+"\nIP信息    : "+ipInfo+"\n请求http : "+result['http']['name']+"\n*****************************HTTP请求*****************************"
+            WeWorktPostContent          = "*****************************HTTP请求*****************************\n请求ID    : "+result['http']['id']+ "\n请求时间 : "+UTC2BJtime(result['http']['created_at'])+"\n"+"请求IP    : "+result['http']['remote_addr']+"\nIP信息    : "+ipInfo+"\n请求方法 : "+result['http']['method']+"\nUA信息 : "+str(result['http']['user_agent'])+"\nData : "+str(result['http']['data'])+"\nContent-Type: "+str(result['http']['content_type'])+"\n请求地址 : "+result['http']['name']+"\n*****************************HTTP请求*****************************"
             WeWorktPostdata1['text']['content']  = str(WeWorktPostContent)
             WeWorktPostdata1            = json.dumps(WeWorktPostdata1)
             res                         = requests.post(url=robotAPI, data=WeWorktPostdata1, headers=WeWorktPostheaders)
